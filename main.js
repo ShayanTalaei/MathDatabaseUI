@@ -273,6 +273,10 @@ function sanitizeLaTeX(text, asMath=false) {
     .replace(/\\begin\{theorem\}|\\end\{theorem\}/g, '')
     .replace(/\\begin\{lemma\}|\\end\{lemma\}/g, '')
     .replace(/\\begin\{definition\}|\\end\{definition\}/g, '')
+    // remove list environments that MathJax can't render well
+    .replace(/\\begin\{(?:enumerate|itemize)\*?\}/g, '')
+    .replace(/\\end\{(?:enumerate|itemize)\*?\}/g, '')
+    .replace(/\\item\s*/g, '\u2022 ')
     // common typos such as \beign{enumerate}
     .replace(/\\beign\s*\{/g, '\\begin{');
 
@@ -281,8 +285,8 @@ function sanitizeLaTeX(text, asMath=false) {
     .replace(/\$(\\(?:eq)?ref\{[^}]+\})\$/g, '$1')
     .replace(/\\\((\\(?:eq)?ref\{[^}]+\})\\\)/g, '$1')
     .replace(/\\\[(\\(?:eq)?ref\{[^}]+\})\\\]/g, '$1')
-    .replace(/\\eqref\{([^}]+)\}/g, '\\eqref{$1}')
-    .replace(/\\ref\{([^}]+)\}/g, '\\ref{$1}');
+    .replace(/\\(C?ref|eqref)\{([^}]+)\}/g,
+      (_, cmd, lbl) => `\\text{\\textbackslash ${cmd}\{${lbl}\}}`);
 
   out = out.trim();
   if (asMath && !/[\$\\begin\[]/.test(out)) {

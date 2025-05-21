@@ -89,6 +89,7 @@ html, body {
   border: 1px solid #ccc;
   border-top: none;
   padding: 8px;
+  line-height: 1.4;
   white-space: pre-wrap;
   max-height: 300px;
   overflow-y: auto;
