@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Statement Dependency Graph</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="search-container">
+    <input  type="search" id="paper-search" placeholder="Enter paper ID">
+    <button id="load-btn">Load Graph</button>
+  </div>
+
+  <svg id="graph"></svg>
+
+  <!-- single <ul> driven entirely by JS -->
+  <div id="node-popup" class="hidden">
+    <button id="close-popup">×</button>
+    <h3 id="popup-title"></h3>
+    <ul id="popup-sections" class="toggle-list"></ul>
+  </div>
+
+  <script src="./libs/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="./main.js"></script>
+</body>
+</html>
