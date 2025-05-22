@@ -11,6 +11,24 @@
     <button id="load-btn">Load Graph</button>
   </div>
 
+  <div id="legend">
+    <svg width="0" height="0">
+      <defs>
+        <marker id="legend-blue-arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,-5L10,0L0,5" fill="steelblue"></path>
+        </marker>
+        <marker id="legend-red-arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,-5L10,0L0,5" fill="firebrick"></path>
+        </marker>
+      </defs>
+    </svg>
+    <div><span class="legend-box no-proof"></span>statement without proofs</div>
+    <div><span class="legend-box with-proof"></span>statement with proofs</div>
+    <div><svg class="legend-line"><path d="M2 5 L18 5" stroke="steelblue" stroke-width="2" marker-end="url(#legend-blue-arrow)"/></svg>dependency</div>
+    <div><svg class="legend-line"><path d="M2 5 L18 5" stroke="firebrick" stroke-width="2" marker-end="url(#legend-red-arrow)"/></svg>proof relation</div>
+    <div><svg class="legend-line"><path d="M2 5 L18 5" stroke="steelblue" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#legend-blue-arrow)"/></svg>implicit link</div>
+  </div>
+
   <svg id="graph"></svg>
 
   <!-- single <ul> driven entirely by JS -->
