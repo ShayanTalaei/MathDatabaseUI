@@ -9,7 +9,7 @@ if (isBrowser) {
   titleEl   = d3.select('#popup-title');
   ulEl      = d3.select('#popup-sections');
   closeBtn  = d3.select('#close-popup');
-  dragHandle = titleEl;
+  dragHandle = popup;
   const rect = svg.node().getBoundingClientRect();
   width  = rect.width;
   height = rect.height;
@@ -17,21 +17,32 @@ if (isBrowser) {
 
 // load button
 if (isBrowser) {
-  d3.select('#load-btn').on('click', () => {
-    const pid      = d3.select('#paper-search').property('value');
-    const url      = `./data/${pid}.json?ts=${Date.now()}`;
+  const loadBtn = d3.select('#load-btn');
+  const searchInput = d3.select('#paper-search');
+
+  function loadGraph() {
+    const pid = searchInput.property('value');
+    const url = `./data/${pid}.json?ts=${Date.now()}`;
     console.log('fetching:', url);
-    if (!pid) return alert("Please enter a paper ID.");
+    if (!pid) return alert('Please enter a paper ID.');
     d3.json(url)
       .then(data => {
-        console.log("Nodes:", data.nodes);
-        console.log("Links:", data.links);
+        console.log('Nodes:', data.nodes);
+        console.log('Links:', data.links);
         renderGraph(data.nodes, data.links);
       })
       .catch(err => {
         console.error(err);
         alert(`Failed to load data/${pid}.json (see console).`);
       });
+  }
+
+  loadBtn.on('click', loadGraph);
+  loadBtn.on('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadGraph(); }
+  });
+  searchInput.on('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadGraph(); }
   });
 }
 
@@ -404,7 +415,7 @@ if (isBrowser) {
     popup.classed('hidden', true);
   });
 
-  // enable dragging of the popup using the title as handle
+  // enable dragging of the popup
   let offsetX = 0, offsetY = 0;
   dragHandle.call(d3.drag()
     .on('start', (event) => {
