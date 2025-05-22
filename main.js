@@ -269,20 +269,33 @@ function sanitizeLaTeX(text, asMath=false) {
     .replace(/```(?:latex)?/g, '')
     .replace(/\\documentclass\{[^}]*\}|\\usepackage\{[^}]*}/g, '')
     .replace(/\\begin\{document\}|\\end\{document}/g, '')
-    .replace(/\\begin\{proof\}|\\end\{proof\}/g, '')
-    .replace(/\\begin\{theorem\}|\\end\{theorem\}/g, '')
-    .replace(/\\begin\{lemma\}|\\end\{lemma\}/g, '')
-    .replace(/\\begin\{definition\}|\\end\{definition\}/g, '')
+    // list environments => bullet points
+    .replace(/\\begin\{(?:enumerate|itemize)\*?\}/g, '')
+    .replace(/\\end\{(?:enumerate|itemize)\*?\}/g, '')
+    .replace(/\\item\s*/g, '\u2022 ')
     // common typos such as \beign{enumerate}
     .replace(/\\beign\s*\{/g, '\\begin{');
+
+  const supported = [
+    'equation','equation*','align','align*','alignat','alignat*','gather','gather*',
+    'flalign','flalign*','multline','multline*','eqnarray','eqnarray*','array',
+    'matrix','pmatrix','bmatrix','Bmatrix','vmatrix','Vmatrix','cases','split'
+  ];
+  out = out
+    .replace(/\\begin\{([^}]+)\}/g, (m, env) => {
+      return supported.includes(env) ? m : '';
+    })
+    .replace(/\\end\{([^}]+)\}/g, (m, env) => {
+      return supported.includes(env) ? m : '';
+    });
 
   // Show unresolved references in textual form
   out = out
     .replace(/\$(\\(?:eq)?ref\{[^}]+\})\$/g, '$1')
     .replace(/\\\((\\(?:eq)?ref\{[^}]+\})\\\)/g, '$1')
     .replace(/\\\[(\\(?:eq)?ref\{[^}]+\})\\\]/g, '$1')
-    .replace(/\\eqref\{([^}]+)\}/g, '\\eqref{$1}')
-    .replace(/\\ref\{([^}]+)\}/g, '\\ref{$1}');
+    .replace(/\\(C?ref|eqref)\{([^}]+)\}/g,
+      (_, cmd, lbl) => `\\text{\\textbackslash ${cmd}\{${lbl}\}}`);
 
   out = out.trim();
   if (asMath && !/[\$\\begin\[]/.test(out)) {
