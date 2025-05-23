@@ -301,6 +301,10 @@ function sanitizeLaTeX(text, asMath=false) {
   if (asMath && !/[\$\\begin\[]/.test(out)) {
     out = `\\(${out}\\)`;
   }
+  out = out
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
   return out;
 }
 
@@ -364,7 +368,7 @@ function showPopup(event, d) {
     
     const contentDiv = li.append('div')
       .attr('class', 'toggle-content' + (sec.initiallyCollapsed ? ' hidden' : ''))
-      .html(sec.content);
+      .text(sec.content);
 
     if (sec.grade) {
       const subUl = contentDiv.append('ul').attr('class', 'toggle-list');
@@ -382,7 +386,7 @@ function showPopup(event, d) {
         });
       subLi.append('div')
         .attr('class', 'toggle-content hidden')
-        .html(sec.grade);
+        .text(sec.grade);
     }
   });
 
